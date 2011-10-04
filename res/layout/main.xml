@@ -14,5 +14,11 @@
     android:layout_height="wrap_content"
     android:text="Perform unittests"
     />
+  <Button
+    android:onClick="quit"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Exit"
+    />
 </LinearLayout>
 

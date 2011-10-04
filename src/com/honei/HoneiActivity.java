@@ -25,11 +25,21 @@ public class HoneiActivity extends Activity implements OnClickListener
   public void onClick(View v)
   {
     Context context = getApplicationContext();
-    CharSequence text = "Hello toast!";
+    CharSequence text = runTests();
     int duration = Toast.LENGTH_SHORT;
 
     Toast toast = Toast.makeText(context, text, duration);
     toast.show();
   }
+
+  public void quit(View v)
+  {
+    finish();
+  }
+
+  public native String runTests();
+  static {
+    System.loadLibrary("honei");
+}
 
 }
