@@ -18,12 +18,18 @@
  */
 
 #include <jni.h>
+#include <string.h>
+#include <stdio.h>
 #include "la.h"
 
 JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiActivity_runTests(JNIEnv* env, jobject thiz)
 
 {
+    char text[9999];
+    strcpy(text, "Running tests:\n");
+    int failed = 0;
+
     jsize size = 200;
     double r[size];
     double x[size];
@@ -40,8 +46,27 @@ Java_com_honei_HoneiActivity_runTests(JNIEnv* env, jobject thiz)
     for (i = 0 ; i < size ; ++i)
     {
         if (r[i] != y[i] + x[i] * a)
-            return (*env)->NewStringUTF(env, "ScaledSum Test FAILED!");
+        {
+            strcat(text, "ScaledSum Test FAILED!\n");
+            ++failed;
+            break;
+        }
+        if (i == size - 1)
+            strcat(text, "ScaledSum Test PASSED!\n");
     }
 
-    return (*env)->NewStringUTF(env, "All Tests PASSED!");
+    strcat(text, "==============\n");
+    strcat(text, "==============\n");
+
+    if(failed == 0)
+        strcat(text, "All Tests PASSED");
+    else
+    {
+        char sfailed[10];
+        sprintf(sfailed,"%d",failed);
+        strcat(text, sfailed);
+        strcat(text, " Tests FAILED");
+    }
+
+    return (*env)->NewStringUTF(env, text);
 }
