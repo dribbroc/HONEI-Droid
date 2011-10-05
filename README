@@ -1,0 +1,17 @@
+HONEI DROID
+
+=== Things you need ===
+Recent versions of a Java SDK, Apache Ant, Google Android SDK and Google Android NDK.
+
+=== Build system setup ===
+Copy local.properties.sample to local.properties.
+Replace $PATH_TO_YOUR_ANDROID_SDK by the path to your Android SDK.
+Make sure that your $PATH includes "tools" and "platform-tools" of the Android SDK and the root of the Android NDK.
+
+=== Building ===
+"ant debug" starts a debug build.
+"ant release" starts a release build.
+"ant install" starts a debug build and uploads the binary to a running android emulator instance.
+Make sure to start an emulator instance via "android" before running "ant install".
+
+Further details can be found on the official android sdk help; this project resembles the Android project layout 
