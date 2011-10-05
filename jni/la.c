@@ -28,6 +28,15 @@ void scaled_sum(double * r, double * x, double * y, double a, jsize size)
     }
 }
 
+void scaled_sum3(double * r, double * x, double * y, double * z, jsize size)
+{
+    jsize i = 0;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r[i] = y[i] + x[i] * z[i];
+    }
+}
+
 double dot_product(double * x, double * y, jsize size)
 {
     double r = 0;
@@ -54,4 +63,40 @@ double norm_l2_true(double * x, jsize size)
 {
     double r = norm_l2_false(x, size);
     return sqrt(r);
+}
+
+void sum(double * r, double * x, double * y, jsize size)
+{
+    jsize i = 0;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r[i] = x[i] + y[i];
+    }
+}
+
+void difference(double * r, double * x, double * y, jsize size)
+{
+    jsize i = 0;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r[i] = x[i] - y[i];
+    }
+}
+
+void element_product(double * r, double * x, double * y, jsize size)
+{
+    jsize i = 0;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r[i] = x[i] * y[i];
+    }
+}
+
+void scale(double * r, double * x, double a, jsize size)
+{
+    jsize i = 0;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r[i] = x[i] * a;
+    }
 }

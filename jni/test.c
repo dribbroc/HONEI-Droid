@@ -58,6 +58,57 @@ Java_com_honei_HoneiActivity_runTests(JNIEnv* env, jobject thiz)
     }
     {
         jsize size = 200;
+        double r[size];
+        double x[size];
+        double y[size];
+        double z[size];
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            r[i] = 4711;
+            x[i] = 3.413 + i;
+            y[i] = -56.7 - i;
+            z[i] = 0.12;
+        }
+        scaled_sum3(r, x, y, z, size);
+        for (i = 0 ; i < size ; ++i)
+        {
+            if (r[i] != y[i] + x[i] * z[i])
+            {
+                strcat(text, "ScaledSum3 Test FAILED!\n");
+                ++failed;
+                break;
+            }
+            if (i == size - 1)
+                strcat(text, "ScaledSum3 Test PASSED!\n");
+        }
+    }
+    {
+        jsize size = 200;
+        double r[size];
+        double x[size];
+        double a = 41.781;
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            r[i] = 4711;
+            x[i] = 3.413 + i;
+        }
+        scale(r, x, a, size);
+        for (i = 0 ; i < size ; ++i)
+        {
+            if (r[i] != x[i] * a)
+            {
+                strcat(text, "Scale Test FAILED!\n");
+                ++failed;
+                break;
+            }
+            if (i == size - 1)
+                strcat(text, "Scale Test PASSED!\n");
+        }
+    }
+    {
+        jsize size = 200;
         double x[size];
         double y[size];
         jsize i;
@@ -110,6 +161,81 @@ Java_com_honei_HoneiActivity_runTests(JNIEnv* env, jobject thiz)
         }
         else
             strcat(text, "Norm L2 true Test PASSED!\n");
+    }
+    {
+        jsize size = 200;
+        double r[size];
+        double x[size];
+        double y[size];
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            r[i] = 4711;
+            x[i] = 3.413 + i;
+            y[i] = -56.7 - i;
+        }
+        sum(r, x, y, size);
+        for (i = 0 ; i < size ; ++i)
+        {
+            if (r[i] != x[i] + y[i])
+            {
+                strcat(text, "Sum Test FAILED!\n");
+                ++failed;
+                break;
+            }
+            if (i == size - 1)
+                strcat(text, "Sum Test PASSED!\n");
+        }
+    }
+    {
+        jsize size = 200;
+        double r[size];
+        double x[size];
+        double y[size];
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            r[i] = 4711;
+            x[i] = 3.413 + i;
+            y[i] = -56.7 - i;
+        }
+        difference(r, x, y, size);
+        for (i = 0 ; i < size ; ++i)
+        {
+            if (r[i] != x[i] - y[i])
+            {
+                strcat(text, "Difference Test FAILED!\n");
+                ++failed;
+                break;
+            }
+            if (i == size - 1)
+                strcat(text, "Difference Test PASSED!\n");
+        }
+    }
+    {
+        jsize size = 200;
+        double r[size];
+        double x[size];
+        double y[size];
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            r[i] = 4711;
+            x[i] = 3.413 + i;
+            y[i] = -56.7 - i;
+        }
+        element_product(r, x, y, size);
+        for (i = 0 ; i < size ; ++i)
+        {
+            if (r[i] != x[i] * y[i])
+            {
+                strcat(text, "ElementProduct Test FAILED!\n");
+                ++failed;
+                break;
+            }
+            if (i == size - 1)
+                strcat(text, "ElementProduct Test PASSED!\n");
+        }
     }
 
     strcat(text, "==============\n");

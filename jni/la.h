@@ -20,7 +20,12 @@
 #include <jni.h>
 #include <math.h>
 
-void scaled_sum(double * r, double * x, double * y, double a, jsize size);
+void difference(double * r, double * x, double * y, jsize size);
 double dot_product(double * x, double * y, jsize size);
+void element_product(double * r, double * x, double * y, jsize size);
 double norm_l2_false(double * x, jsize size);
 double norm_l2_true(double * x, jsize size);
+void scale(double * r, double * x, double a, jsize size);
+void scaled_sum(double * r, double * x, double * y, double a, jsize size);
+void scaled_sum3(double * r, double * x, double * y, double * z, jsize size);
+void sum(double * r, double * x, double * y, jsize size);
