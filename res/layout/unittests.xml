@@ -3,17 +3,17 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <Button
-      android:onClick="quit"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Exit"
-      />
     <TextView
       android:id="@+id/unitout"
       android:layout_width="fill_parent" 
       android:layout_height="wrap_content" 
       android:text="Performing unittests..."
+      />
+    <Button
+      android:onClick="quit"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Exit"
       />
 </LinearLayout>
 
