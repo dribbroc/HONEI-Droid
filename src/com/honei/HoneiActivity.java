@@ -29,7 +29,7 @@ import android.content.Context;
 import android.widget.Toast;
 import android.content.Intent;
 
-public class HoneiActivity extends Activity implements OnClickListener
+public class HoneiActivity extends Activity //implements OnClickListener
 {
     /** Called when the activity is first created. */
     public void onCreate(Bundle savedInstanceState)
@@ -41,7 +41,7 @@ public class HoneiActivity extends Activity implements OnClickListener
         setContentView(R.layout.main);
     }
 
-    public void onClick(View v)
+    /*public void onClick(View v)
     {
         Context context = getApplicationContext();
         CharSequence text = runTests();
@@ -49,7 +49,7 @@ public class HoneiActivity extends Activity implements OnClickListener
 
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
-    }
+    }*/
 
     public void quit(View v)
     {
@@ -62,10 +62,5 @@ public class HoneiActivity extends Activity implements OnClickListener
         startActivity(intent);
     }
 
-    public native String runTests();
-    static
-    {
-        System.loadLibrary("honei");
-    }
 
 }

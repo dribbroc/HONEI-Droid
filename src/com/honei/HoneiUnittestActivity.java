@@ -23,17 +23,25 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View.*;
 import android.view.*;
-import android.widget.Button;
+import android.widget.*;
 import android.content.Context;
 import android.widget.Toast;
 
 public class HoneiUnittestActivity extends Activity
 {
-  /** Called when the activity is first created. */
-  @Override
-  public void onCreate(Bundle savedInstanceState)
-  {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.unittests);
-  }
+    /** Called when the activity is first created. */
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.unittests);
+        TextView tv = new TextView(this);
+        tv.setText(runTests());
+        setContentView(tv);
+    }
+
+    public native String runTests();
+    static
+    {
+        System.loadLibrary("honei");
+    }
 }

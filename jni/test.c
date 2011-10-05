@@ -23,7 +23,7 @@
 #include "la.h"
 
 JNIEXPORT jstring JNICALL
-Java_com_honei_HoneiActivity_runTests(JNIEnv* env, jobject thiz)
+Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
 
 {
     char text[9999];
