@@ -20,11 +20,27 @@
 #include <jni.h>
 #include <math.h>
 
+struct BMQ1
+{
+    jsize size;
+    jsize root;
+    double * ll;
+    double * ld;
+    double * lu;
+    double * dl;
+    double * dd;
+    double * du;
+    double * ul;
+    double * ud;
+    double * uu;
+};
+
 void difference(double * r, double * x, double * y, jsize size);
 double dot_product(double * x, double * y, jsize size);
 void element_product(double * r, double * x, double * y, jsize size);
 double norm_l2_false(double * x, jsize size);
 double norm_l2_true(double * x, jsize size);
+void product(double * r, double *x, struct BMQ1 bmq1);
 void scale(double * r, double * x, double a, jsize size);
 void scaled_sum(double * r, double * x, double * y, double a, jsize size);
 void scaled_sum3(double * r, double * x, double * y, double * z, jsize size);

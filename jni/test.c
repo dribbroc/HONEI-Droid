@@ -46,7 +46,7 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
         scaled_sum(r, x, y, a, size);
         for (i = 0 ; i < size ; ++i)
         {
-            if (r[i] != y[i] + x[i] * a)
+            if (r[i] != x[i] + y[i] * a)
             {
                 strcat(text, "ScaledSum Test FAILED!\n");
                 ++failed;
@@ -73,7 +73,7 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
         scaled_sum3(r, x, y, z, size);
         for (i = 0 ; i < size ; ++i)
         {
-            if (r[i] != y[i] + x[i] * z[i])
+            if (r[i] != x[i] + y[i] * z[i])
             {
                 strcat(text, "ScaledSum3 Test FAILED!\n");
                 ++failed;
@@ -235,6 +235,62 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
             }
             if (i == size - 1)
                 strcat(text, "ElementProduct Test PASSED!\n");
+        }
+    }
+    {
+        jsize size = 81;
+        jsize root = (jsize) sqrt(size);
+        double r[size];
+        double x[size];
+        double ll[size];
+        double ld[size];
+        double lu[size];
+        double dl[size];
+        double dd[size];
+        double du[size];
+        double ul[size];
+        double ud[size];
+        double uu[size];
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            r[i] = 4711;
+            x[i] = 3.413 + i;
+            ll[i] = 0;
+            ld[i] = 0;
+            lu[i] = 0;
+            dl[i] = 0;
+            dd[i] = 1;
+            du[i] = 0;
+            ul[i] = 0;
+            ud[i] = 0;
+            uu[i] = 0;
+        }
+
+        struct BMQ1 bmq1;
+        bmq1.size = size;
+        bmq1.root = root;
+        bmq1.ll = ll;
+        bmq1.ld = ld;
+        bmq1.lu = lu;
+        bmq1.dl = dl;
+        bmq1.dd = dd;
+        bmq1.du = du;
+        bmq1.ul = ul;
+        bmq1.ud = ud;
+        bmq1.uu = uu;
+
+        product(r, x, bmq1);
+        for (i = 0 ; i < size ; ++i)
+        {
+            if (r[i] != x[i])
+            {
+                strcat(text, "Q1 BMDV Test FAILED!\n");
+                ++failed;
+                break;
+            }
+            if (i == size - 1)
+                strcat(text, "Q1 BMDV Test PASSED!\n");
         }
     }
 

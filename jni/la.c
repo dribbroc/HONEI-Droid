@@ -24,7 +24,7 @@ void scaled_sum(double * r, double * x, double * y, double a, jsize size)
     jsize i = 0;
     for (i = 0 ; i < size ; ++i)
     {
-        r[i] = y[i] + a*x[i];
+        r[i] = x[i] + a*y[i];
     }
 }
 
@@ -33,7 +33,7 @@ void scaled_sum3(double * r, double * x, double * y, double * z, jsize size)
     jsize i = 0;
     for (i = 0 ; i < size ; ++i)
     {
-        r[i] = y[i] + x[i] * z[i];
+        r[i] = x[i] + y[i] * z[i];
     }
 }
 
@@ -99,4 +99,25 @@ void scale(double * r, double * x, double a, jsize size)
     {
         r[i] = x[i] * a;
     }
+}
+
+void product(double * r, double *x, struct BMQ1 bmq1)
+{
+    jsize size = bmq1.size;
+    jsize root = bmq1.root;
+    jsize i = 0;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r[i] = 0.;
+    }
+
+    scaled_sum3(r + root + 1, r + root + 1, bmq1.ll + root + 1, x,            size - root - 1);
+    scaled_sum3(r + root,     r + root,     bmq1.ld + root,     x,            size - root);
+    scaled_sum3(r + root - 1, r + root - 1, bmq1.lu + root - 1, x,            size - root + 1);
+    scaled_sum3(r + 1,        r + 1,        bmq1.dl + 1,        x,            size - 1);
+    scaled_sum3(r,            r,            bmq1.dd,            x,            size);
+    scaled_sum3(r,            r,            bmq1.du,            x + 1,        size - 1);
+    scaled_sum3(r,            r,            bmq1.ul,            x + root - 1, size - root + 1);
+    scaled_sum3(r,            r,            bmq1.ud,            x + root,     size - root);
+    scaled_sum3(r,            r,            bmq1.uu,            x + root + 1, size - root - 1);
 }
