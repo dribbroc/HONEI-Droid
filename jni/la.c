@@ -34,6 +34,24 @@ double dot_product(double * x, double * y, jsize size)
     jsize i = 0;
     for (i = 0 ; i < size ; ++i)
     {
-        r += x[i] + y[i];
+        r += x[i] * y[i];
     }
+    return r;
+}
+
+double norm_l2_false(double * x, jsize size)
+{
+    double r = 0;
+    jsize i = 0;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r += x[i] * x[i];
+    }
+    return r;
+}
+
+double norm_l2_true(double * x, jsize size)
+{
+    double r = norm_l2_false(x, size);
+    return sqrt(r);
 }

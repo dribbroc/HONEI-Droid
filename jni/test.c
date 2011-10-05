@@ -30,29 +30,86 @@ Java_com_honei_HoneiActivity_runTests(JNIEnv* env, jobject thiz)
     strcpy(text, "Running tests:\n");
     int failed = 0;
 
-    jsize size = 200;
-    double r[size];
-    double x[size];
-    double y[size];
-    double a = 3;
-    jsize i;
-    for (i = 0 ; i < size ; ++i)
     {
-        r[i] = 4711;
-        x[i] = 3.413 + i;
-        y[i] = -56.7 - i;
-    }
-    scaled_sum(r, x, y, a, size);
-    for (i = 0 ; i < size ; ++i)
-    {
-        if (r[i] != y[i] + x[i] * a)
+        jsize size = 200;
+        double r[size];
+        double x[size];
+        double y[size];
+        double a = 3;
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
         {
-            strcat(text, "ScaledSum Test FAILED!\n");
-            ++failed;
-            break;
+            r[i] = 4711;
+            x[i] = 3.413 + i;
+            y[i] = -56.7 - i;
         }
-        if (i == size - 1)
-            strcat(text, "ScaledSum Test PASSED!\n");
+        scaled_sum(r, x, y, a, size);
+        for (i = 0 ; i < size ; ++i)
+        {
+            if (r[i] != y[i] + x[i] * a)
+            {
+                strcat(text, "ScaledSum Test FAILED!\n");
+                ++failed;
+                break;
+            }
+            if (i == size - 1)
+                strcat(text, "ScaledSum Test PASSED!\n");
+        }
+    }
+    {
+        jsize size = 200;
+        double x[size];
+        double y[size];
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            x[i] = 5;
+            y[i] = 3;
+        }
+        double r = dot_product(x, y, size);
+        if (r != (5 * 3 * size))
+        {
+            strcat(text, "DotProduct Test FAILED!\n");
+            ++failed;
+        }
+        else
+            strcat(text, "DotProduct Test PASSED!\n");
+    }
+    {
+        jsize size = 200;
+        double x[size];
+        double y[size];
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            x[i] = 5;
+        }
+        double r = norm_l2_false(x, size);
+        if (r != (5 * 5 * size))
+        {
+            strcat(text, "Norm L2 false Test FAILED!\n");
+            ++failed;
+        }
+        else
+            strcat(text, "Norm L2 false Test PASSED!\n");
+    }
+    {
+        jsize size = 200;
+        double x[size];
+        double y[size];
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            x[i] = 5;
+        }
+        double r = norm_l2_true(x, size);
+        if (r != sqrt(5 * 5 * size))
+        {
+            strcat(text, "Norm L2 true Test FAILED!\n");
+            ++failed;
+        }
+        else
+            strcat(text, "Norm L2 true Test PASSED!\n");
     }
 
     strcat(text, "==============\n");
