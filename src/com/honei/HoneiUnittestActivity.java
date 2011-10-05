@@ -34,14 +34,21 @@ public class HoneiUnittestActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.unittests);
-        TextView tv = new TextView(this);
+
+        //TextView tv = new TextView(this);
+        TextView tv = (TextView)findViewById(R.id.unitout);
         tv.setText(runTests());
-        setContentView(tv);
+        //setContentView(tv);
     }
 
     public native String runTests();
     static
     {
         System.loadLibrary("honei");
+    }
+
+    public void quit(View v)
+    {
+        finish();
     }
 }
