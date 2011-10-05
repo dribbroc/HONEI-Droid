@@ -3,12 +3,16 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-    <TextView
-      android:id="@+id/unitout"
-      android:layout_width="fill_parent" 
-      android:layout_height="wrap_content" 
-      android:text="Performing unittests..."
-      />
+    <ScrollView
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content" >
+        <TextView
+          android:id="@+id/unitout"
+          android:layout_width="fill_parent" 
+          android:layout_height="wrap_content" 
+          android:text="Performing unittests..."
+        />
+    </ScrollView>
     <Button
       android:onClick="quit"
       android:layout_width="wrap_content"
