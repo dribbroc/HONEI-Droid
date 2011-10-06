@@ -3,6 +3,7 @@
       package="com.honei"
       android:versionCode="1"
       android:versionName="1.0">
+      <uses-sdk> android:minSdkVersion="1.5" </uses-sdk>
       <application android:label="HONEI" android:icon="@drawable/bee">
         <activity android:name="HoneiActivity">
             <intent-filter>
