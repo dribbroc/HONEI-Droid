@@ -35,7 +35,8 @@ public class HoneiActivity extends Activity //implements OnClickListener
     public void onCreate(Bundle savedInstanceState)
     {
         //get button and set listener
-        Button button = (Button)findViewById(R.id.button);
+        //Button button_unittest = (Button)findViewById(R.id.button_unittest);
+        //Button button_benchmark = (Button)findViewById(R.id.button_benchmark);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
@@ -59,6 +60,12 @@ public class HoneiActivity extends Activity //implements OnClickListener
     public void startUnittests(View v)
     {
         Intent intent = new Intent(this, HoneiUnittestActivity.class);
+        startActivity(intent);
+    }
+
+    public void startBenchmarks(View v)
+    {
+        Intent intent = new Intent(this, HoneiBenchmarkActivity.class);
         startActivity(intent);
     }
 

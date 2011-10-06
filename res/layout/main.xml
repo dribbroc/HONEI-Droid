@@ -8,11 +8,17 @@
     android:layout_height="wrap_content" 
     android:text="Welcome to HONEI-Droid"
     />
-  <Button android:id="@+id/button"
+  <Button android:id="@+id/button_unittest"
     android:onClick="startUnittests"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="Perform unittests"
+    />
+  <Button android:id="@+id/button_benchmark"
+    android:onClick="startBenchmarks"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Perform benchmarks"
     />
   <Button
     android:onClick="quit"

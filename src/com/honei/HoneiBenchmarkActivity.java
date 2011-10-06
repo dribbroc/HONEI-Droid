@@ -27,21 +27,21 @@ import android.widget.*;
 import android.content.Context;
 import android.widget.Toast;
 
-public class HoneiUnittestActivity extends Activity
+public class HoneiBenchmarkActivity extends Activity
 {
     /** Called when the activity is first created. */
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.unittests);
+        setContentView(R.layout.benchmarks);
 
-        //TextView tv = new TextView(this);
-        TextView tv = (TextView)findViewById(R.id.unitout);
-        tv.setText(runTests());
-        //setContentView(tv);
+        TextView tv = (TextView)findViewById(R.id.benchout);
+        tv.setText("running ScaledSum benchmark...\n");
+        //tv.append(scaledSumBenchmark());
+        tv.append("scaledSumBenchmark()");
     }
 
-    public native String runTests();
+    public native String scaledSumBenchmark();
 
     static
     {
