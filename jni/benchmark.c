@@ -27,7 +27,7 @@
 JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiBenchmarkActivity_scaledSumBenchmark(JNIEnv* env, jobject thiz)
 {
-    jsize size = 2000000;
+    jsize size = 1000000;
     double * r = (double*) malloc (size * sizeof(double));
     double * x = (double*) malloc (size * sizeof(double));
     double * y = (double*) malloc (size * sizeof(double));
@@ -43,9 +43,13 @@ Java_com_honei_HoneiBenchmarkActivity_scaledSumBenchmark(JNIEnv* env, jobject th
     struct timeval at, bt;
 
     gettimeofday(&at, 0);
-    scaled_sum(r, x, y, a, size);
+    for (i = 0 ; i < 5 ; ++i)
+    {
+        scaled_sum(r, x, y, a, size);
+    }
     gettimeofday(&bt, 0);
     double total = (bt.tv_sec + (bt.tv_usec / 1e6)) - (at.tv_sec + (at.tv_usec / 1e6));
+    total /= 5.;
     double mflops = (2 * size) / total / 1e6;
 
     char text[999];
@@ -65,6 +69,53 @@ Java_com_honei_HoneiBenchmarkActivity_scaledSumBenchmark(JNIEnv* env, jobject th
     strcat(text, "=========================\n");
 
     free(r);
+    free(x);
+    free(y);
+    return (*env)->NewStringUTF(env, text);
+}
+
+JNIEXPORT jstring JNICALL
+Java_com_honei_HoneiBenchmarkActivity_dotProductBenchmark(JNIEnv* env, jobject thiz)
+{
+    jsize size = 1000000;
+    double * x = (double*) malloc (size * sizeof(double));
+    double * y = (double*) malloc (size * sizeof(double));
+    double r;
+    jsize i;
+    for (i = 0 ; i < size ; ++i)
+    {
+        x[i] = 3.413 + i;
+        y[i] = -56.7 - i;
+    }
+
+    struct timeval at, bt;
+
+    gettimeofday(&at, 0);
+    for (i = 0 ; i < 5 ; ++i)
+    {
+        r = dot_product(x, y, size);
+    }
+    gettimeofday(&bt, 0);
+    double total = (bt.tv_sec + (bt.tv_usec / 1e6)) - (at.tv_sec + (at.tv_usec / 1e6));
+    total /= 5.;
+    double mflops = (2 * size) / total / 1e6;
+
+    char text[999];
+    strcpy(text, "DotProduct double, size = ");
+    char snumber[10];
+    sprintf(snumber, "%d", size);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "Runtime[sec]: ");
+    sprintf(snumber, "%lf", total);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "MFLOPS: ");
+    sprintf(snumber, "%lf", mflops);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "=========================\n");
+
     free(x);
     free(y);
     return (*env)->NewStringUTF(env, text);
