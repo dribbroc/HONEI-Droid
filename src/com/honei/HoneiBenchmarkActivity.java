@@ -26,20 +26,35 @@ import android.view.*;
 import android.widget.*;
 import android.content.Context;
 import android.widget.Toast;
+import android.os.AsyncTask;
 
 public class HoneiBenchmarkActivity extends Activity
 {
+    private TextView tv;
+    private class ScaledSumTask extends AsyncTask<Void, String, Integer> {
+        protected Integer doInBackground(Void... a) {
+            publishProgress("ScaledSum benchmark...\n");
+            publishProgress(scaledSumBenchmark());
+            publishProgress("DotProduct benchmark...\n");
+            publishProgress(dotProductBenchmark());
+            return 1;
+        }
+
+        protected void onProgressUpdate(String... result)
+        {
+            tv.append(result[0]);
+        }
+    }
+
     /** Called when the activity is first created. */
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.benchmarks);
 
-        TextView tv = (TextView)findViewById(R.id.benchout);
-        tv.setText("running ScaledSum benchmark...\n");
-        tv.append(scaledSumBenchmark());
-        tv.append("running DotProduct benchmark...\n");
-        tv.append(dotProductBenchmark());
+        tv = (TextView)findViewById(R.id.benchout);
+        tv.setText("Running benchmarks:\n");
+        new ScaledSumTask().execute();
     }
 
     public native String scaledSumBenchmark();
