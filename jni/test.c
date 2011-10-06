@@ -24,7 +24,6 @@
 
 JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
-
 {
     char text[9999];
     strcpy(text, "Running tests:\n");

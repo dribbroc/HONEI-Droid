@@ -37,8 +37,7 @@ public class HoneiBenchmarkActivity extends Activity
 
         TextView tv = (TextView)findViewById(R.id.benchout);
         tv.setText("running ScaledSum benchmark...\n");
-        //tv.append(scaledSumBenchmark());
-        tv.append("scaledSumBenchmark()");
+        tv.append(scaledSumBenchmark());
     }
 
     public native String scaledSumBenchmark();
