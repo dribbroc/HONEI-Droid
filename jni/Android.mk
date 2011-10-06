@@ -4,6 +4,6 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := honei
 LOCAL_SRC_FILES := la.c test.c benchmark.c
-TARGET_ARCH_ABI := armeabi-v7a
+TARGET_ARCH_ABI := armeabi-v7a armeabi
 
 include $(BUILD_SHARED_LIBRARY)
