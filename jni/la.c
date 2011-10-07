@@ -19,6 +19,15 @@
 
 #include "la.h"
 
+void copy(double * src, double * dest, jsize size)
+{
+    jsize i = 0;
+    for (i = 0 ; i < size ; ++i)
+    {
+        dest[i] = src[i];
+    }
+}
+
 void scaled_sum(double * r, double * x, double * y, double a, jsize size)
 {
     jsize i = 0;

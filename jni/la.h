@@ -39,6 +39,7 @@ struct BMQ1
     double * uu;
 };
 
+void copy(double * src, double * dest, jsize size);
 void defect(double * r, double * rhs, struct BMQ1 bmq1, double * x);
 void difference(double * r, double * x, double * y, jsize size);
 double dot_product(double * x, double * y, jsize size);

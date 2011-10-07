@@ -3,7 +3,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := honei
-LOCAL_SRC_FILES := la.c cg.c test.c benchmark.c
+LOCAL_SRC_FILES := la.c bicgstab.c cg.c test.c benchmark.c
 TARGET_ARCH_ABI := armeabi-v7a armeabi
 
 include $(BUILD_SHARED_LIBRARY)
