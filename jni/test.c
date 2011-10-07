@@ -237,9 +237,10 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
         }
     }
     {
-        jsize size = 81;
+        jsize size = 25;
         jsize root = (jsize) sqrt(size);
         double r[size];
+        double ref[size];
         double x[size];
         double ll[size];
         double ld[size];
@@ -254,17 +255,43 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
         for (i = 0 ; i < size ; ++i)
         {
             r[i] = 4711;
-            x[i] = 3.413 + i;
-            ll[i] = 0;
-            ld[i] = 0;
-            lu[i] = 0;
-            dl[i] = 0;
-            dd[i] = 1;
-            du[i] = 0;
-            ul[i] = 0;
-            ud[i] = 0;
-            uu[i] = 0;
+            x[i] = i;
+            ll[i] = i;
+            ld[i] = i+2;
+            lu[i] = i+4;
+            dl[i] = i+6;
+            dd[i] = i+8;
+            du[i] = i+10;
+            ul[i] = i+12;
+            ud[i] = i+14;
+            uu[i] = i+16;
         }
+
+        ref[0] = 224;
+        ref[1] = 305;
+        ref[2] = 404;
+        ref[3] = 515;
+        ref[4] = 638;
+        ref[5] = 782;
+        ref[6] = 948;
+        ref[7] = 1137;
+        ref[8] = 1344;
+        ref[9] = 1569;
+        ref[10] = 1812;
+        ref[11] = 2073;
+        ref[12] = 2352;
+        ref[13] = 2649;
+        ref[14] = 2964;
+        ref[15] = 3297;
+        ref[16] = 3648;
+        ref[17] = 4017;
+        ref[18] = 4404;
+        ref[19] = 3934;
+        ref[20] = 3446;
+        ref[21] = 2939;
+        ref[22] = 3212;
+        ref[23] = 3497;
+        ref[24] = 2944;
 
         struct BMQ1 bmq1;
         bmq1.size = size;
@@ -282,7 +309,7 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
         product(r, x, bmq1);
         for (i = 0 ; i < size ; ++i)
         {
-            if (r[i] != x[i])
+            if (r[i] != ref[i])
             {
                 strcat(text, "Q1 BMDV Test FAILED!\n");
                 ++failed;
