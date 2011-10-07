@@ -171,7 +171,7 @@ Java_com_honei_HoneiBenchmarkActivity_productBenchmark(JNIEnv* env, jobject thiz
     gettimeofday(&at, 0);
     for (i = 0 ; i < 5 ; ++i)
     {
-        product(r, x, bmq1);
+        product(r, bmq1, x);
     }
     gettimeofday(&bt, 0);
     double total = (bt.tv_sec + (bt.tv_usec / 1e6)) - (at.tv_sec + (at.tv_usec / 1e6));

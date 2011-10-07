@@ -101,7 +101,7 @@ void scale(double * r, double * x, double a, jsize size)
     }
 }
 
-void product(double * r, double *x, struct BMQ1 bmq1)
+void product(double * r, struct BMQ1 bmq1, double * x)
 {
     jsize size = bmq1.size;
     jsize root = bmq1.root;
@@ -120,4 +120,10 @@ void product(double * r, double *x, struct BMQ1 bmq1)
     scaled_sum3(r,            r,            bmq1.ul,            x + root - 1, size - root + 1);
     scaled_sum3(r,            r,            bmq1.ud,            x + root,     size - root);
     scaled_sum3(r,            r,            bmq1.uu,            x + root + 1, size - root - 1);
+}
+
+void defect(double * r, double * rhs, struct BMQ1 bmq1, double * x)
+{
+    product(r, bmq1, x);
+    difference(r, rhs, r, bmq1.size);
 }

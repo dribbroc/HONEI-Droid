@@ -21,11 +21,12 @@
 #include <string.h>
 #include <stdio.h>
 #include "la.h"
+#include "cg.h"
 
 JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
 {
-    char text[9999];
+    char text[50000];
     strcpy(text, "Running tests:\n");
     int failed = 0;
 
@@ -306,7 +307,7 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
         bmq1.ud = ud;
         bmq1.uu = uu;
 
-        product(r, x, bmq1);
+        product(r, bmq1, x);
         for (i = 0 ; i < size ; ++i)
         {
             if (r[i] != ref[i])
@@ -317,6 +318,86 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
             }
             if (i == size - 1)
                 strcat(text, "Q1 BMDV Test PASSED!\n");
+        }
+    }
+    {
+        jsize size = 25;
+        jsize root = (jsize) sqrt(size);
+        double r[size];
+        double b[size];
+        double P[size];
+        double x[size];
+        double jac[size];
+        double ll[size];
+        double ld[size];
+        double lu[size];
+        double dl[size];
+        double dd[size];
+        double du[size];
+        double ul[size];
+        double ud[size];
+        double uu[size];
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            b[i] = i;
+            x[i] = 0;
+            ll[i] = 0.1;
+            ld[i] = 0.2;
+            lu[i] = 0.3;
+            dl[i] = 0.4;
+            dd[i] = 1.01;
+            du[i] = 0.4;
+            ul[i] = 0.3;
+            ud[i] = 0.2;
+            uu[i] = 0.1;
+            jac[i] = 1. / dd[i];
+        }
+
+
+        struct BMQ1 bmq1;
+        bmq1.size = size;
+        bmq1.root = root;
+        bmq1.ll = ll;
+        bmq1.ld = ld;
+        bmq1.lu = lu;
+        bmq1.dl = dl;
+        bmq1.dd = dd;
+        bmq1.du = du;
+        bmq1.ul = ul;
+        bmq1.ud = ud;
+        bmq1.uu = uu;
+
+        defect(r, b, bmq1, x);
+        double initial_defect = norm_l2_true(r, size);
+        jsize used_iters = cg_jac(bmq1, jac, b, x, 1000, 1e-8);
+        defect(r, b, bmq1, x);
+        double final_defect = norm_l2_true(r, size);
+
+        strcat(text, "CG JAC Test:\n");
+        char snumber[20];
+        sprintf(snumber, "%e", initial_defect);
+        strcat(text, "Initial defect: ");
+        strcat(text, snumber);
+        strcat(text, "\n");
+        sprintf(snumber, "%e", final_defect);
+        strcat(text, "Final defect: ");
+        strcat(text, snumber);
+        strcat(text, "\n");
+        sprintf(snumber, "%d", used_iters);
+        strcat(text, "Used iters: ");
+        strcat(text, snumber);
+        strcat(text, "\n");
+        for (i = 0 ; i < size ; ++i)
+        {
+            if (final_defect > initial_defect || used_iters != 25)
+            {
+                strcat(text, "CG JAC Test FAILED!\n");
+                ++failed;
+                break;
+            }
+            if (i == size - 1)
+                strcat(text, "CG JAC Test PASSED!\n");
         }
     }
 
