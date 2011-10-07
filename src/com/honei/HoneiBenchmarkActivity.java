@@ -37,6 +37,8 @@ public class HoneiBenchmarkActivity extends Activity
             publishProgress(scaledSumBenchmark());
             publishProgress("DotProduct benchmark...\n");
             publishProgress(dotProductBenchmark());
+            publishProgress("Q1 BMDV benchmark...\n");
+            publishProgress(productBenchmark());
             return 1;
         }
 
@@ -59,6 +61,7 @@ public class HoneiBenchmarkActivity extends Activity
 
     public native String scaledSumBenchmark();
     public native String dotProductBenchmark();
+    public native String productBenchmark();
 
     static
     {

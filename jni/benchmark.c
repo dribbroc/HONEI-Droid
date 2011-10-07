@@ -120,3 +120,90 @@ Java_com_honei_HoneiBenchmarkActivity_dotProductBenchmark(JNIEnv* env, jobject t
     free(y);
     return (*env)->NewStringUTF(env, text);
 }
+
+JNIEXPORT jstring JNICALL
+Java_com_honei_HoneiBenchmarkActivity_productBenchmark(JNIEnv* env, jobject thiz)
+{
+    // BEWARE! Flops are hardcoded for lvl 9
+    jsize size = 263169;
+
+    double * r = (double*) malloc (size * sizeof(double));
+    double * x = (double*) malloc (size * sizeof(double));
+    double * ll = (double*) malloc (size * sizeof(double));
+    double * ld = (double*) malloc (size * sizeof(double));
+    double * lu = (double*) malloc (size * sizeof(double));
+    double * dl = (double*) malloc (size * sizeof(double));
+    double * dd = (double*) malloc (size * sizeof(double));
+    double * du = (double*) malloc (size * sizeof(double));
+    double * ul = (double*) malloc (size * sizeof(double));
+    double * ud = (double*) malloc (size * sizeof(double));
+    double * uu = (double*) malloc (size * sizeof(double));
+    jsize i;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r[i] = 4711;
+        x[i] = 3.413 - i;
+        ll[i] = i;
+        ld[i] = i;
+        lu[i] = i;
+        dl[i] = i;
+        dd[i] = i;
+        du[i] = i;
+        ul[i] = i;
+        ud[i] = i;
+        uu[i] = i;
+    }
+    struct BMQ1 bmq1;
+    bmq1.size = size;
+    bmq1.root = (jsize) sqrt(size);
+    bmq1.ll = ll;
+    bmq1.ld = ld;
+    bmq1.lu = lu;
+    bmq1.dl = dl;
+    bmq1.dd = dd;
+    bmq1.du = du;
+    bmq1.ul = ul;
+    bmq1.ud = ud;
+    bmq1.uu = uu;
+
+    struct timeval at, bt;
+
+    gettimeofday(&at, 0);
+    for (i = 0 ; i < 5 ; ++i)
+    {
+        product(r, x, bmq1);
+    }
+    gettimeofday(&bt, 0);
+    double total = (bt.tv_sec + (bt.tv_usec / 1e6)) - (at.tv_sec + (at.tv_usec / 1e6));
+    total /= 5.;
+    double mflops = 4730882 / total / 1e6;
+
+    char text[999];
+    strcpy(text, "Q1 BMDV double, size = ");
+    char snumber[10];
+    sprintf(snumber, "%d", size);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "Runtime[sec]: ");
+    sprintf(snumber, "%lf", total);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "MFLOPS: ");
+    sprintf(snumber, "%lf", mflops);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "=========================\n");
+
+    free(r);
+    free(x);
+    free(ll);
+    free(ld);
+    free(lu);
+    free(dl);
+    free(dd);
+    free(du);
+    free(ul);
+    free(ud);
+    free(uu);
+    return (*env)->NewStringUTF(env, text);
+}
