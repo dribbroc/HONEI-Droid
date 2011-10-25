@@ -112,23 +112,105 @@ void scale(double * r, double * x, double a, jsize size)
 
 void product(double * r, struct BMQ1 bmq1, double * x)
 {
+    jsize index = 0;;
     jsize size = bmq1.size;
-    jsize root = bmq1.root;
-    jsize i = 0;
-    for (i = 0 ; i < size ; ++i)
+    jsize m = bmq1.root;
+
+    //index 0
+    r[index] = bmq1.dd[index] * x[index]
+        + bmq1.du[index] * x[index + 1]
+        + bmq1.ul[index] * x[index + m - 1]
+        + bmq1.ud[index] * x[index + m]
+        + bmq1.uu[index] * x[index + m + 1];
+
+    //index in [1, root_n -1[
+    index = 1;
+    for ( ; index < m - 1 ; ++index)
     {
-        r[i] = 0.;
+        r[index] = bmq1.dd[index] * x[index]
+            + bmq1.dl[index] * x[index - 1]
+            + bmq1.du[index] * x[index + 1]
+            + bmq1.ul[index] * x[index + m - 1]
+            + bmq1.ud[index] * x[index + m]
+            + bmq1.uu[index] * x[index + m + 1];
     }
 
-    scaled_sum3(r + root + 1, r + root + 1, bmq1.ll + root + 1, x,            size - root - 1);
-    scaled_sum3(r + root,     r + root,     bmq1.ld + root,     x,            size - root);
-    scaled_sum3(r + root - 1, r + root - 1, bmq1.lu + root - 1, x,            size - root + 1);
-    scaled_sum3(r + 1,        r + 1,        bmq1.dl + 1,        x,            size - 1);
-    scaled_sum3(r,            r,            bmq1.dd,            x,            size);
-    scaled_sum3(r,            r,            bmq1.du,            x + 1,        size - 1);
-    scaled_sum3(r,            r,            bmq1.ul,            x + root - 1, size - root + 1);
-    scaled_sum3(r,            r,            bmq1.ud,            x + root,     size - root);
-    scaled_sum3(r,            r,            bmq1.uu,            x + root + 1, size - root - 1);
+    //index root_n -1
+    index = m - 1;
+    r[index] = bmq1.dd[index] * x[index]
+        + bmq1.lu[index] * x[index - m + 1]
+        + bmq1.dl[index] * x[index - 1]
+        + bmq1.du[index] * x[index + 1]
+        + bmq1.ul[index] * x[index + m - 1]
+        + bmq1.ud[index] * x[index + m]
+        + bmq1.uu[index] * x[index + m + 1];
+
+    //index root_n
+    index = m;
+    r[index] = bmq1.dd[index] * x[index]
+        + bmq1.lu[index] * x[index - m + 1]
+        + bmq1.ld[index] * x[index - m]
+        + bmq1.dl[index] * x[index - 1]
+        + bmq1.du[index] * x[index + 1]
+        + bmq1.ul[index] * x[index + m - 1]
+        + bmq1.ud[index] * x[index + m]
+        + bmq1.uu[index] * x[index + m + 1];
+
+    //index in [root_n + 1, n - (root_n + 1)[
+    index = m + 1;
+    for ( ; index < size - m - 1 ; ++index)
+    {
+        r[index] = bmq1.dd[index] * x[index]
+            + bmq1.ll[index] * x[index - m - 1]
+            + bmq1.lu[index] * x[index - m + 1]
+            + bmq1.ld[index] * x[index - m]
+            + bmq1.dl[index] * x[index - 1]
+            + bmq1.du[index] * x[index + 1]
+            + bmq1.ul[index] * x[index + m - 1]
+            + bmq1.ud[index] * x[index + m]
+            + bmq1.uu[index] * x[index + m + 1];
+    }
+
+    //index n - (root_n + 1)
+    index = size - m - 1;
+    r[index] = bmq1.dd[index] * x[index]
+        + bmq1.ll[index] * x[index - m - 1]
+        + bmq1.lu[index] * x[index - m + 1]
+        + bmq1.ld[index] * x[index - m]
+        + bmq1.dl[index] * x[index - 1]
+        + bmq1.du[index] * x[index + 1]
+        + bmq1.ul[index] * x[index + m - 1]
+        + bmq1.ud[index] * x[index + m];
+
+    //index n - root_n
+    index = size - m;
+    r[index] = bmq1.dd[index] * x[index]
+        + bmq1.ll[index] * x[index - m - 1]
+        + bmq1.lu[index] * x[index - m + 1]
+        + bmq1.ld[index] * x[index - m]
+        + bmq1.dl[index] * x[index - 1]
+        + bmq1.du[index] * x[index + 1]
+        + bmq1.ul[index] * x[index + m - 1];
+
+    //index in [n - root_n + 1, n -1[
+    index = size - m + 1;
+    for ( ; index < size - 1 ; ++ index)
+    {
+        r[index] = bmq1.dd[index] * x[index]
+            + bmq1.ll[index] * x[index - m - 1]
+            + bmq1.lu[index] * x[index - m + 1]
+            + bmq1.ld[index] * x[index - m]
+            + bmq1.dl[index] * x[index - 1]
+            + bmq1.du[index] * x[index + 1];
+    }
+
+    //index n - 1
+    index = size - 1;
+    r[index] = bmq1.dd[index] * x[index]
+        + bmq1.ll[index] * x[index - m - 1]
+        + bmq1.lu[index] * x[index - m + 1]
+        + bmq1.ld[index] * x[index - m]
+        + bmq1.dl[index] * x[index - 1];
 }
 
 void defect(double * r, double * rhs, struct BMQ1 bmq1, double * x)
