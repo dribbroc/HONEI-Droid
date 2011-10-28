@@ -18,6 +18,8 @@
  */
 
 #include "la.h"
+#include <pthread.h>
+#define NUM_THREADS 2
 
 void copy(double * src, double * dest, jsize size)
 {
@@ -28,12 +30,61 @@ void copy(double * src, double * dest, jsize size)
     }
 }
 
-void scaled_sum(double * r, double * x, double * y, double a, jsize size)
+struct scaled_sum_thread_data
+{
+    double * r;
+    double * x;
+    double * y;
+    double a;
+    jsize size;
+};
+
+void * scaled_sum_thread(void * argument)
 {
     jsize i = 0;
+    struct scaled_sum_thread_data * data = (struct scaled_sum_thread_data *) argument;
+    double * r = data->r;
+    double * x = data->x;
+    double * y = data->y;
+    double a = data->a;
+    jsize size = data->size;
     for (i = 0 ; i < size ; ++i)
     {
         r[i] = x[i] + a*y[i];
+    }
+}
+
+void scaled_sum(double * r, double * x, double * y, double a, jsize size)
+{
+    pthread_t threads[NUM_THREADS];
+    struct scaled_sum_thread_data data[NUM_THREADS];
+    jsize sizes[NUM_THREADS];
+    jsize i = 0;
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        sizes[i] = size / NUM_THREADS;
+    }
+    sizes[NUM_THREADS - 1] += size - ((size / NUM_THREADS) * NUM_THREADS);
+
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        struct scaled_sum_thread_data tdata;
+        tdata.r = r;
+        tdata.x = x;
+        tdata.y = y;
+        tdata.a = a;
+        tdata.size = sizes[i];
+        data[i] = tdata;
+        pthread_create(&threads[i], NULL, scaled_sum_thread, (void*) &data[i]);
+
+        r+=sizes[i];
+        x+=sizes[i];
+        y+=sizes[i];
+    }
+
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        pthread_join(threads[i], NULL);
     }
 }
 
