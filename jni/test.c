@@ -24,6 +24,17 @@
 #include "cg.h"
 #include "bicgstab.h"
 
+#ifdef HONEI_NEON
+#include <arm_neon.h>
+#warning "NEON is defined"
+#endif
+
+#ifdef __ARM_ACLE
+#include <arm_acle.h>
+#warning "ACLE is defined"
+#endif
+
+
 JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
 {
@@ -57,6 +68,63 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
                 strcat(text, "ScaledSum Test PASSED!\n");
         }
     }
+    {
+        jsize size = 200;
+        float r[size];
+        float x[size];
+        float y[size];
+        float a = 3;
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            r[i] = 4711;
+            x[i] = 3.413 + i;
+            y[i] = -56.7 - i;
+        }
+        scaled_sumf(r, x, y, a, size);
+        for (i = 0 ; i < size ; ++i)
+        {
+            if (r[i] != x[i] + y[i] * a)
+            {
+                strcat(text, "ScaledSumf Test FAILED!\n");
+                ++failed;
+                break;
+            }
+            if (i == size - 1)
+                strcat(text, "ScaledSumf Test PASSED!\n");
+        }
+    }
+#ifdef HONEI_NEON
+    {
+        jsize size = 200;
+        float32_t r[size];
+        float32_t x[size];
+        float32_t y[size];
+        float32_t a = 3.f;
+        jsize i;
+        for (i = 0 ; i < size ; ++i)
+        {
+            r[i] = 4711;
+            x[i] = 3.413 + i;
+            y[i] = -56.7 - i;
+        }
+        scaled_sumf_NEON(r, x, y, a, size);
+        for (i = 0 ; i < size ; ++i)
+        {
+            if (r[i] != x[i] + y[i] * a)
+            {
+                strcat(text, "ScaledSumf_NEON Test FAILED!\n");
+                char bla[100];
+                sprintf(bla, "Index %d : %f , %f \n", i, r[i], x[i] + y[i] * a);
+                strcat(text, bla);
+                ++failed;
+                break;
+            }
+            if (i == size - 1)
+                strcat(text, "ScaledSumf_NEON Test PASSED!\n");
+        }
+    }
+#endif
     {
         jsize size = 200;
         double r[size];

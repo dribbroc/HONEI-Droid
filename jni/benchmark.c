@@ -75,6 +75,108 @@ Java_com_honei_HoneiBenchmarkActivity_scaledSumBenchmark(JNIEnv* env, jobject th
 }
 
 JNIEXPORT jstring JNICALL
+Java_com_honei_HoneiBenchmarkActivity_scaledSumfBenchmark(JNIEnv* env, jobject thiz)
+{
+    jsize size = 10000000;
+    float * r = (float*) malloc (size * sizeof(float));
+    float * x = (float*) malloc (size * sizeof(float));
+    float * y = (float*) malloc (size * sizeof(float));
+    float a = 3;
+    jsize i;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r[i] = 4711;
+        x[i] = 3.413 + i;
+        y[i] = -56.7 - i;
+    }
+
+    struct timeval at, bt;
+
+    gettimeofday(&at, 0);
+    for (i = 0 ; i < 10 ; ++i)
+    {
+        scaled_sumf(r, x, y, a, size);
+    }
+    gettimeofday(&bt, 0);
+    double total = (bt.tv_sec + (bt.tv_usec / 1e6)) - (at.tv_sec + (at.tv_usec / 1e6));
+    total /= 10.;
+    double mflops = (2 * size) / total / 1e6;
+
+    char text[999];
+    strcpy(text, "ScaledSumf float, size = ");
+    char snumber[10];
+    sprintf(snumber, "%d", size);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "Runtime[sec]: ");
+    sprintf(snumber, "%lf", total);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "MFLOPS: ");
+    sprintf(snumber, "%lf", mflops);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "=========================\n");
+
+    free(r);
+    free(x);
+    free(y);
+    return (*env)->NewStringUTF(env, text);
+}
+
+#ifdef HONEI_NEON
+JNIEXPORT jstring JNICALL
+Java_com_honei_HoneiBenchmarkActivity_scaledSumfneonBenchmark(JNIEnv* env, jobject thiz)
+{
+    jsize size = 10000000;
+    float32_t * r = (float32_t*) malloc (size * sizeof(float32_t));
+    float32_t * x = (float32_t*) malloc (size * sizeof(float32_t));
+    float32_t * y = (float32_t*) malloc (size * sizeof(float32_t));
+    float32_t a = 3;
+    jsize i;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r[i] = 4711;
+        x[i] = 3.413 + i;
+        y[i] = -56.7 - i;
+    }
+
+    struct timeval at, bt;
+
+    gettimeofday(&at, 0);
+    for (i = 0 ; i < 10 ; ++i)
+    {
+        scaled_sumf_NEON(r, x, y, a, size);
+    }
+    gettimeofday(&bt, 0);
+    double total = (bt.tv_sec + (bt.tv_usec / 1e6)) - (at.tv_sec + (at.tv_usec / 1e6));
+    total /= 10.;
+    double mflops = (2 * size) / total / 1e6;
+
+    char text[999];
+    strcpy(text, "ScaledSumfNEON float32_t, size = ");
+    char snumber[10];
+    sprintf(snumber, "%d", size);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "Runtime[sec]: ");
+    sprintf(snumber, "%lf", total);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "MFLOPS: ");
+    sprintf(snumber, "%lf", mflops);
+    strcat(text, snumber);
+    strcat(text, "\n");
+    strcat(text, "=========================\n");
+
+    free(r);
+    free(x);
+    free(y);
+    return (*env)->NewStringUTF(env, text);
+}
+#endif
+
+JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiBenchmarkActivity_dotProductBenchmark(JNIEnv* env, jobject thiz)
 {
     jsize size = 1000000;

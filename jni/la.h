@@ -24,6 +24,10 @@
 #include <jni.h>
 #include <math.h>
 
+#ifdef HONEI_NEON
+#include <arm_neon.h>
+#endif
+
 struct BMQ1
 {
     jsize size;
@@ -49,7 +53,13 @@ double norm_l2_true(double * x, jsize size);
 void product(double * r, struct BMQ1 bmq1, double * x);
 void scale(double * r, double * x, double a, jsize size);
 void scaled_sum(double * r, double * x, double * y, double a, jsize size);
+void scaled_sumf(float * r, float * x, float * y, float a, jsize size);
 void scaled_sum3(double * r, double * x, double * y, double * z, jsize size);
 void sum(double * r, double * x, double * y, jsize size);
+
+#ifdef HONEI_NEON
+void scaled_sumi_NEON(int * r, int * x, int * y, int a, jsize size);
+void scaled_sumf_NEON(float32_t * r, float32_t * x, float32_t * y, float32_t a, jsize size);
+#endif
 
 #endif

@@ -19,6 +19,8 @@
 
 #include "la.h"
 #include <pthread.h>
+
+
 #define NUM_THREADS 2
 
 void copy(double * src, double * dest, jsize size)
@@ -39,6 +41,35 @@ struct scaled_sum_thread_data
     jsize size;
 };
 
+struct scaled_sumf_thread_data
+{
+    float * r;
+    float * x;
+    float * y;
+    float a;
+    jsize size;
+};
+
+#ifdef HONEI_NEON
+struct scaled_sumfneon_thread_data
+{
+    float32_t * r;
+    float32_t * x;
+    float32_t * y;
+    float32_t a;
+    jsize size;
+};
+
+struct scaled_sumineon_thread_data
+{
+    int32_t * r;
+    int32_t * x;
+    int32_t * y;
+    int32_t a;
+    jsize size;
+};
+#endif
+
 void * scaled_sum_thread(void * argument)
 {
     jsize i = 0;
@@ -53,6 +84,74 @@ void * scaled_sum_thread(void * argument)
         r[i] = x[i] + a*y[i];
     }
 }
+
+void * scaled_sumf_thread(void * argument)
+{
+    jsize i = 0;
+    struct scaled_sumf_thread_data * data = (struct scaled_sumf_thread_data *) argument;
+    float * r = data->r;
+    float * x = data->x;
+    float * y = data->y;
+    float a = data->a;
+    jsize size = data->size;
+    for (i = 0 ; i < size ; ++i)
+    {
+        r[i] = x[i] + a*y[i];
+    }
+}
+
+#ifdef HONEI_NEON
+void * scaled_sumi_thread_NEON(void * argument)
+{
+    jsize i = 0;
+    struct scaled_sumfneon_thread_data * data = (struct scaled_sumfneon_thread_data *) argument;
+    int32_t * r = (int32_t *)data->r;
+    const int32_t * x = (const int32_t *)data->x;
+    const int32_t * y = (const int32_t *)data->y;
+    const int32_t a = (const int32_t)data->a;
+    jsize size = data->size;
+
+    int32x4_t rx4, xx4, yx4, ax4;
+
+    ax4 = vdupq_n_s32(a);
+
+    for(i; i < size ; i += 4)
+    {
+        xx4 = vld1q_s32(&(x[i]));
+        yx4 = vld1q_s32(&(y[i]));
+
+        rx4 = vmlaq_s32(xx4, ax4, yx4);
+
+        vst1q_s32(&(r[i]), rx4);
+    }
+
+}
+void * scaled_sumf_thread_NEON(void * argument)
+{
+    jsize i = 0;
+    struct scaled_sumfneon_thread_data * data = (struct scaled_sumfneon_thread_data *) argument;
+    float32_t * r = (float32_t *)data->r;
+    const float32_t * x = (const float32_t *)data->x;
+    const float32_t * y = (const float32_t *)data->y;
+    const float32_t a = (const float32_t)data->a;
+    jsize size = data->size;
+
+    float32x4_t rx4, xx4, yx4, ax4;
+
+    ax4 = vdupq_n_f32(a);
+
+    for(i; i < size ; i += 4)
+    {
+        xx4 = vld1q_f32(&(x[i]));
+        yx4 = vld1q_f32(&(y[i]));
+
+        rx4 = vmlaq_f32(xx4, ax4, yx4);
+
+        vst1q_f32(&(r[i]), rx4);
+    }
+
+}
+#endif
 
 void scaled_sum(double * r, double * x, double * y, double a, jsize size)
 {
@@ -76,7 +175,6 @@ void scaled_sum(double * r, double * x, double * y, double a, jsize size)
         tdata.size = sizes[i];
         data[i] = tdata;
         pthread_create(&threads[i], NULL, scaled_sum_thread, (void*) &data[i]);
-
         r+=sizes[i];
         x+=sizes[i];
         y+=sizes[i];
@@ -87,6 +185,106 @@ void scaled_sum(double * r, double * x, double * y, double a, jsize size)
         pthread_join(threads[i], NULL);
     }
 }
+
+void scaled_sumf(float * r, float * x, float * y, float a, jsize size)
+{
+    pthread_t threads[NUM_THREADS];
+    struct scaled_sumf_thread_data data[NUM_THREADS];
+    jsize sizes[NUM_THREADS];
+    jsize i = 0;
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        sizes[i] = size / NUM_THREADS;
+    }
+    sizes[NUM_THREADS - 1] += size - ((size / NUM_THREADS) * NUM_THREADS);
+
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        struct scaled_sumf_thread_data tdata;
+        tdata.r = r;
+        tdata.x = x;
+        tdata.y = y;
+        tdata.a = a;
+        tdata.size = sizes[i];
+        data[i] = tdata;
+        pthread_create(&threads[i], NULL, scaled_sumf_thread, (void*) &data[i]);
+        r+=sizes[i];
+        x+=sizes[i];
+        y+=sizes[i];
+    }
+
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        pthread_join(threads[i], NULL);
+    }
+}
+
+#ifdef HONEI_NEON
+void scaled_sumi_NEON(int * r, int * x, int * y, int a, jsize size)
+{
+    pthread_t threads[NUM_THREADS];
+    struct scaled_sumineon_thread_data data[NUM_THREADS];
+    jsize sizes[NUM_THREADS];
+    jsize i = 0;
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        sizes[i] = size / NUM_THREADS;
+    }
+    sizes[NUM_THREADS - 1] += size - ((size / NUM_THREADS) * NUM_THREADS);
+
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        struct scaled_sumineon_thread_data tdata;
+        tdata.r = r;
+        tdata.x = x;
+        tdata.y = y;
+        tdata.a = a;
+        tdata.size = sizes[i];
+        data[i] = tdata;
+        pthread_create(&threads[i], NULL, scaled_sumi_thread_NEON, (void*) &data[i]);
+        r+=sizes[i];
+        x+=sizes[i];
+        y+=sizes[i];
+    }
+
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        pthread_join(threads[i], NULL);
+    }
+}
+void scaled_sumf_NEON(float32_t * r, float32_t * x, float32_t * y, float32_t a, jsize size)
+{
+    pthread_t threads[NUM_THREADS];
+    struct scaled_sumfneon_thread_data data[NUM_THREADS];
+    jsize sizes[NUM_THREADS];
+    jsize i = 0;
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        sizes[i] = size / NUM_THREADS;
+    }
+    sizes[NUM_THREADS - 1] += size - ((size / NUM_THREADS) * NUM_THREADS);
+
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        struct scaled_sumfneon_thread_data tdata;
+        tdata.r = r;
+        tdata.x = x;
+        tdata.y = y;
+        tdata.a = a;
+        tdata.size = sizes[i];
+        data[i] = tdata;
+        pthread_create(&threads[i], NULL, scaled_sumf_thread_NEON, (void*) &data[i]);
+        r+=sizes[i];
+        x+=sizes[i];
+        y+=sizes[i];
+    }
+
+    for (i = 0 ; i < NUM_THREADS ; ++i)
+    {
+        pthread_join(threads[i], NULL);
+    }
+}
+#endif
 
 void scaled_sum3(double * r, double * x, double * y, double * z, jsize size)
 {

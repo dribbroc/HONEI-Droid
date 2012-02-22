@@ -35,6 +35,10 @@ public class HoneiBenchmarkActivity extends Activity
         protected Integer doInBackground(Void... a) {
             publishProgress("ScaledSum benchmark...\n");
             publishProgress(scaledSumBenchmark());
+            publishProgress("ScaledSumf benchmark...\n");
+            publishProgress(scaledSumfBenchmark());
+            publishProgress("ScaledSumfNEON benchmark...\n");
+            publishProgress(scaledSumfneonBenchmark());
             publishProgress("DotProduct benchmark...\n");
             publishProgress(dotProductBenchmark());
             publishProgress("Q1 BMDV benchmark...\n");
@@ -60,6 +64,8 @@ public class HoneiBenchmarkActivity extends Activity
     }
 
     public native String scaledSumBenchmark();
+    public native String scaledSumfBenchmark();
+    public native String scaledSumfneonBenchmark();
     public native String dotProductBenchmark();
     public native String productBenchmark();
 
