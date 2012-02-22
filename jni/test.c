@@ -34,6 +34,7 @@
 #warning "ACLE is defined"
 #endif
 
+#include <cpu-features.h>
 
 JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
@@ -41,7 +42,41 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
     char text[50000];
     strcpy(text, "Running tests:\n");
     int failed = 0;
+    int useneon = 0;
 
+    {
+        AndroidCpuFamily cpufam = android_getCpuFamily();
+        if(cpufam == ANDROID_CPU_FAMILY_ARM)
+            strcat(text, "Android cpu family: ARM\n");
+        else if(cpufam == ANDROID_CPU_FAMILY_X86)
+            strcat(text, "Android cpu family: X86\n");
+        else if(cpufam == ANDROID_CPU_FAMILY_UNKNOWN)
+            strcat(text, "Android cpu family: UNKNOWN\n");
+
+        int numcores = android_getCpuCount();
+        char nc[1000];
+        sprintf(nc, "Numbers of cores: %d\n", numcores);
+        strcat(text, nc);
+
+        uint64_t features = android_getCpuFeatures();
+        if(!(features & ANDROID_CPU_ARM_FEATURE_ARMv7 == 0))
+            strcat(text, "Android CPU features ARMv7: yes\n");
+        else
+            strcat(text, "Android CPU features ARMv7: no\n");
+
+        if(!(features & ANDROID_CPU_ARM_FEATURE_VFPv3 == 0))
+            strcat(text, "Android CPU features VFPv3: yes\n");
+        else
+            strcat(text, "Android CPU features VFPv3: no\n");
+
+        if(!(features & ANDROID_CPU_ARM_FEATURE_NEON == 0))
+        {
+            strcat(text, "Android CPU features NEON: yes\n");
+            useneon = 1;
+        }
+        else
+            strcat(text, "Android CPU features NEON: no\n");
+    }
     {
         jsize size = 200;
         double r[size];
@@ -96,6 +131,9 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
     }
 #ifdef HONEI_NEON
     {
+        if(useneon)
+        {
+
         jsize size = 200;
         float32_t r[size];
         float32_t x[size];
@@ -123,7 +161,9 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
             if (i == size - 1)
                 strcat(text, "ScaledSumf_NEON Test PASSED!\n");
         }
+        }
     }
+
 #endif
     {
         jsize size = 200;

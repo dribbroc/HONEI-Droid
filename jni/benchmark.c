@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 
+#include <cpu-features.h>
 #include "la.h"
 
 JNIEXPORT jstring JNICALL
@@ -128,6 +129,11 @@ Java_com_honei_HoneiBenchmarkActivity_scaledSumfBenchmark(JNIEnv* env, jobject t
 JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiBenchmarkActivity_scaledSumfneonBenchmark(JNIEnv* env, jobject thiz)
 {
+
+    uint64_t features = android_getCpuFeatures();
+    if(!(features & ANDROID_CPU_ARM_FEATURE_NEON == 0))
+    {
+
     jsize size = 10000000;
     float32_t * r = (float32_t*) malloc (size * sizeof(float32_t));
     float32_t * x = (float32_t*) malloc (size * sizeof(float32_t));
@@ -173,6 +179,9 @@ Java_com_honei_HoneiBenchmarkActivity_scaledSumfneonBenchmark(JNIEnv* env, jobje
     free(x);
     free(y);
     return (*env)->NewStringUTF(env, text);
+    }
+    else
+        return (*env)->NewStringUTF(env, "skipping NEON benchmarks...");
 }
 #endif
 
