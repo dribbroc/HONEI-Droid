@@ -28,7 +28,7 @@
 JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiBenchmarkActivity_scaledSumBenchmark(JNIEnv* env, jobject thiz)
 {
-    jsize size = 1000000;
+    jsize size = 10000000;
     double * r = (double*) malloc (size * sizeof(double));
     double * x = (double*) malloc (size * sizeof(double));
     double * y = (double*) malloc (size * sizeof(double));
@@ -44,13 +44,13 @@ Java_com_honei_HoneiBenchmarkActivity_scaledSumBenchmark(JNIEnv* env, jobject th
     struct timeval at, bt;
 
     gettimeofday(&at, 0);
-    for (i = 0 ; i < 5 ; ++i)
+    for (i = 0 ; i < 10 ; ++i)
     {
         scaled_sum(r, x, y, a, size);
     }
     gettimeofday(&bt, 0);
     double total = (bt.tv_sec + (bt.tv_usec / 1e6)) - (at.tv_sec + (at.tv_usec / 1e6));
-    total /= 5.;
+    total /= 10.;
     double mflops = (2 * size) / total / 1e6;
 
     char text[999];

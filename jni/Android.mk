@@ -9,7 +9,7 @@ include $(CLEAR_VARS)
 #endif
 
 #activate for TEGRA2
-LOCAL_CFLAGS := -O3 -funroll-loops -mfpu=vfpv3-d16 -march=armv7-a
+LOCAL_CFLAGS += -march=armv7-a -mtune=cortex-a9 -mfloat-abi=softfp -mfp=vfpv3-d16 -O3 -funroll-loops
 
 LOCAL_MODULE    := honei
 LOCAL_SRC_FILES := la.c bicgstab.c cg.c test.c benchmark.c

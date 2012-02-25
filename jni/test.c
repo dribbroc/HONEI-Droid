@@ -59,6 +59,10 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
         strcat(text, nc);
 
         uint64_t features = android_getCpuFeatures();
+        char featcode[1000];
+        sprintf(featcode, "Featurecode: %d \n", features);
+        strcat(text, featcode);
+
         if(!(features & ANDROID_CPU_ARM_FEATURE_ARMv7 == 0))
             strcat(text, "Android CPU features ARMv7: yes\n");
         else

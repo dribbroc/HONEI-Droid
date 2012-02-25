@@ -78,7 +78,7 @@ void * scaled_sum_thread(void * argument)
     double * x = data->x;
     double * y = data->y;
     double a = data->a;
-    jsize size = data->size;
+    const jsize size = data->size;
     for (i = 0 ; i < size ; ++i)
     {
         r[i] = x[i] + a*y[i];
@@ -93,7 +93,7 @@ void * scaled_sumf_thread(void * argument)
     float * x = data->x;
     float * y = data->y;
     float a = data->a;
-    jsize size = data->size;
+    const jsize size = data->size;
     for (i = 0 ; i < size ; ++i)
     {
         r[i] = x[i] + a*y[i];
@@ -109,7 +109,7 @@ void * scaled_sumi_thread_NEON(void * argument)
     const int32_t * x = (const int32_t *)data->x;
     const int32_t * y = (const int32_t *)data->y;
     const int32_t a = (const int32_t)data->a;
-    jsize size = data->size;
+    const jsize size = data->size;
 
     int32x4_t rx4, xx4, yx4, ax4;
 
@@ -134,7 +134,7 @@ void * scaled_sumf_thread_NEON(void * argument)
     const float32_t * x = (const float32_t *)data->x;
     const float32_t * y = (const float32_t *)data->y;
     const float32_t a = (const float32_t)data->a;
-    jsize size = data->size;
+    const jsize size = data->size;
 
     float32x4_t rx4, xx4, yx4, ax4;
 
