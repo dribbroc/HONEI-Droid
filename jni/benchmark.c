@@ -125,10 +125,10 @@ Java_com_honei_HoneiBenchmarkActivity_scaledSumfBenchmark(JNIEnv* env, jobject t
     return (*env)->NewStringUTF(env, text);
 }
 
-#ifdef HONEI_NEON
 JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiBenchmarkActivity_scaledSumfneonBenchmark(JNIEnv* env, jobject thiz)
 {
+#ifdef HONEI_NEON
 
     uint64_t features = android_getCpuFeatures();
     if(!(features & ANDROID_CPU_ARM_FEATURE_NEON == 0))
@@ -181,9 +181,10 @@ Java_com_honei_HoneiBenchmarkActivity_scaledSumfneonBenchmark(JNIEnv* env, jobje
     return (*env)->NewStringUTF(env, text);
     }
     else
-        return (*env)->NewStringUTF(env, "skipping NEON benchmarks...");
-}
+        return (*env)->NewStringUTF(env, "skipping NEON benchmarks...\n");
 #endif
+    return (*env)->NewStringUTF(env, "skipping NEON benchmarks...\n");
+}
 
 JNIEXPORT jstring JNICALL
 Java_com_honei_HoneiBenchmarkActivity_dotProductBenchmark(JNIEnv* env, jobject thiz)

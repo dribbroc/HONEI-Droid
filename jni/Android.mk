@@ -2,10 +2,14 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-    LOCAL_CFLAGS := -DHONEI_NEON=1 -mfloat-abi=softfp -mfpu=neon
-    !LOCAL_SRC_FILES += la.c.neon test.c.neon
-endif
+#activate for NEON support
+#ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+#    LOCAL_CFLAGS := -DHONEI_NEON=1 -mfloat-abi=softfp -mfpu=neon -O3 -ftree-vectorize -funroll-loops -march=armv7-a
+#    LOCAL_SRC_FILES += la.c.neon test.c.neon benchmark.c.neon
+#endif
+
+#activate for TEGRA2
+LOCAL_CFLAGS := -O3 -funroll-loops -mfpu=vfpv3-d16 -march=armv7-a
 
 LOCAL_MODULE    := honei
 LOCAL_SRC_FILES := la.c bicgstab.c cg.c test.c benchmark.c

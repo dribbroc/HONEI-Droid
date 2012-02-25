@@ -163,8 +163,8 @@ Java_com_honei_HoneiUnittestActivity_runTests(JNIEnv* env, jobject thiz)
         }
         }
     }
-
 #endif
+
     {
         jsize size = 200;
         double r[size];
