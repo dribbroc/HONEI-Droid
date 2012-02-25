@@ -2,6 +2,10 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
+#deactivate if target-specifc flags need to be used
+LOCAL_CFLAGS += -O3 -funroll-loops
+
+
 #activate for NEON support
 #ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
 #    LOCAL_CFLAGS := -DHONEI_NEON=1 -mfloat-abi=softfp -mfpu=neon -O3 -ftree-vectorize -funroll-loops -march=armv7-a
